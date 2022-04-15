@@ -1,39 +1,38 @@
 <template>
-  <div class="score">
-    <div class="score__team">
-      <div class="score__team-name subtitle">{{ match.team1 }}</div>
-      <div class="score__team-score title">{{ match.score1 }}</div>
-    </div>
-    <div class="score__team">
-      <div class="score__team-name subtitle">{{ match.team2 }}</div>
-      <div class="score__team-score title">{{ score2 }}</div>
-    </div>
+  <div class="tile is-child box">
+    <p class="title is-2">{{ team1 }}</p>
+    <p class="is-score-text">{{ score1 }}</p>
+  </div>
+  <div class="tile is-child box">
+    <p class="title is-2">{{ team2 }}</p>
+    <p class="is-score-text">{{ score2 }}</p>
   </div>
 </template>
 
 <script>
+// const { ipcRenderer } = require('electron');
+
 export default {
   name: 'ScoreDisplay',
-  props: {
-    match: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
-      score2: this.match.score2
+      score1: 0,
+      score2: 0,
+      team1: 'Domaci',
+      team2: 'Hostia',
     }
   },
   mounted() {
-    this.emitter.on('addScore', score => {
-          this.score2 = score;
-        }
-    );
+    this.emitter.on('score:team1', score => this.score1 = score);
+    this.emitter.on('score:team2', score => this.score2 = score);
+    this.emitter.on('score:name:team1', name1 => this.team1 = name1);
+    this.emitter.on('score:name:team2', name2 => this.team2 = name2);
   }
 }
 </script>
 
 <style>
-
+  .is-score-text {
+    font-size: 24vh;
+  }
 </style>

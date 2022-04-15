@@ -1,5 +1,5 @@
 <template>
-  <div class="base-timer">
+  <div class="base-timer container">
     <svg
         class="base-timer__svg"
         viewBox="0 0 100 100"
@@ -27,11 +27,10 @@
     </svg>
     <span class="base-timer__label title">{{ formattedTimeLeft }}</span>
   </div>
-  <button class="button is-primary" @click="startTimer">Start</button>
-  <button class="button" @click="pauseTimer">{{ isPaused ? 'Resume' : 'Pause' }}</button>
 </template>
 
 <script>
+// const { ipcRenderer } = require('electron');
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 10;
 const ALERT_THRESHOLD = 5;
@@ -57,14 +56,9 @@ export default {
     return {
       timePassed: 0,
       timerInterval: null,
-      isPaused: false,
+      isPaused: true,
+      timeLimit: 5 * 60, // 5 minutes
     };
-  },
-  props: {
-    timeLimit: {
-      type: Number,
-      default: 5 * 60, // 5 minutes
-    },
   },
 
   computed: {
@@ -105,6 +99,15 @@ export default {
       }
     },
   },
+  mounted() {
+    this.emitter.on("timer:start", this.startTimer);
+    this.emitter.on("timer:pause", () => this.isPaused = true);
+    this.emitter.on("timer:time-limit", time => {
+      this.onTimesUp();
+      this.timeLimit = time;
+    });
+    this.startTimer();
+  },
 
   watch: {
     timeLeft(newValue) {
@@ -118,19 +121,22 @@ export default {
     onTimesUp() {
       console.log("Time's up!");
       clearInterval(this.timerInterval);
+      this.timePassed = 0;
+      this.isPaused = true;
+      this.timerInterval = null;
     },
 
     startTimer() {
+      this.isPaused = false;
+      if (this.timerInterval) {
+        return;
+      }
       this.timerInterval = setInterval(() => {
         if (this.isPaused) {
           return;
         }
         this.timePassed += 1;
       }, 1000);
-    },
-
-    pauseTimer() {
-      this.isPaused = !this.isPaused;
     },
   },
 };
@@ -139,8 +145,8 @@ export default {
 <style scoped lang="scss">
 .base-timer {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 750px;
+  height: 750px;
 
   &__svg {
     transform: scaleX(-1);
@@ -180,13 +186,13 @@ export default {
 
   &__label {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 750px;
+    height: 750px;
     top: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 48px;
+    font-size: 300px;
   }
 }
 </style>

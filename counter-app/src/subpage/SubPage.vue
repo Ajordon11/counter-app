@@ -1,14 +1,15 @@
 <template>
-  <HelloWorld/>
+  <MainToolbar/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import MainToolbar from "@/components/MainToolbar";
 
 export default {
-  name: 'App',
+  name: 'SubPage',
   components: {
-    HelloWorld
+    MainToolbar
   }
 }
 </script>
