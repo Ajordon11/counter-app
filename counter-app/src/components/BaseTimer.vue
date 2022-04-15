@@ -49,7 +49,9 @@ const COLOR_CODES = {
     threshold: ALERT_THRESHOLD,
   },
 };
-
+/**
+ * @source https://medium.com/js-dojo/how-to-create-an-animated-countdown-timer-with-vue-89738903823f
+ */
 export default {
   data() {
     return {

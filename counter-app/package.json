@@ -19,6 +19,7 @@
     "bulma": "^0.9.3",
     "bulmaswatch": "^0.8.1",
     "core-js": "^3.8.3",
+    "mitt": "^3.0.0",
     "node-sass": "^7.0.1",
     "sass-loader": "^12.6.0",
     "vue": "^3.2.13"
