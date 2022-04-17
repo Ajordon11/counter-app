@@ -138,7 +138,7 @@ export default {
       isCountdownPaused: true,
       matchPart: 1,
       tourneyPart: 'Skupina',
-      tourneyParts: ['Skupina', 'Štvrťfinále', 'Semifinále', 'Finále', 'O 3. miesto'],
+      tourneyParts: ['Skupina', 'Štvrťfinále', 'Semifinále', 'O 3. miesto', 'Finále'],
     }
   },
   methods: {
