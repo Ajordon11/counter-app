@@ -1,20 +1,22 @@
 <template>
   <p class="is-huge is-center">{{ matchPart }}.</p>
-  <p class="title is-3">Finale</p>
+  <p class="title is-3">{{ tourneyPart }}</p>
 </template>
 
 <script>
-// const { ipcRenderer } = require('electron');
+import { ipcRenderer } from "electron";
 
 export default {
   name: 'MatchPartDisplay',
   data() {
     return {
       matchPart: 1,
+      tourneyPart: 'Skupina',
     };
   },
   mounted() {
-    this.emitter.on('timer:match-part', (part) => this.matchPart = part);
+    ipcRenderer.on('timer:match-part', (event, part) => this.matchPart = part);
+    ipcRenderer.on('timer:tourney-part', (event, part)  => this.tourneyPart = part);
   }
 }
 </script>

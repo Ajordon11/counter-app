@@ -105,13 +105,20 @@
             </span>
           </button>
         </p>
+        <div class="control">
+          <div class="select">
+            <select @change="changeTourneyPart">
+              <option v-for="part in tourneyParts" :key="part" :value="part">{{ part }}</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
   </article>
 </template>
 
 <script>
-// const { ipcRenderer } = require('electron');
+import { ipcRenderer } from "electron";
 
 export default {
   name: 'MainToolbar',
@@ -130,6 +137,8 @@ export default {
       countdownLimit: 0,
       isCountdownPaused: true,
       matchPart: 1,
+      tourneyPart: 'Skupina',
+      tourneyParts: ['Skupina', 'Štvrťfinále', 'Semifinále', 'Finále', 'O 3. miesto'],
     }
   },
   methods: {
@@ -141,7 +150,7 @@ export default {
       } else {
         this.score1++;
       }
-      this.emitter.emit('score:team1', this.score1);
+      ipcRenderer.send('score:team1', this.score1);
     },
     scoreTeam2(subtract = false) {
       if (subtract && this.score2 <= 0) {
@@ -151,34 +160,34 @@ export default {
       } else {
         this.score2++;
       }
-      this.emitter.emit('score:team2', this.score2);
+      ipcRenderer.send('score:team2', this.score2);
     },
     resetScore() {
       this.score1 = 0;
       this.score2 = 0;
-      this.emitter.emit('score:team1', this.score1);
-      this.emitter.emit('score:team2', this.score2);
+      ipcRenderer.send('score:team1', this.score1);
+      ipcRenderer.send('score:team2', this.score2);
     },
     startTimer() {
       this.isCountdownPaused = !this.isCountdownPaused;
-      this.emitter.emit('timer:start');
+      ipcRenderer.send('timer:start');
     },
     pauseTimer() {
       this.isCountdownPaused = !this.isCountdownPaused;
-      this.emitter.emit('timer:pause');
+      ipcRenderer.send('timer:pause');
     },
     setCountdownLimit(limit) {
       this.countdownLimit = limit;
       this.isCountdownPaused = true;
-      this.emitter.emit('timer:time-limit', this.countdownLimit);
+      ipcRenderer.send('timer:time-limit', this.countdownLimit);
     },
     changeTeam1Name(event) {
       this.team1 = event.target.value;
-      this.emitter.emit('score:name:team1', this.team1);
+      ipcRenderer.send('score:name:team1', this.team1);
     },
     changeTeam2Name(event) {
       this.team2 = event.target.value;
-      this.emitter.emit('score:name:team2', this.team2);
+      ipcRenderer.send('score:name:team2', this.team2);
     },
     changeMatchPart(subtract = false) {
       if (subtract && this.matchPart <= 0) {
@@ -188,7 +197,11 @@ export default {
       } else {
         this.matchPart++;
       }
-      this.emitter.emit('timer:match-part', this.matchPart);
+      ipcRenderer.send('timer:match-part', this.matchPart);
+    },
+    changeTourneyPart(event) {
+      this.tourneyPart = event.target.value;
+      ipcRenderer.send('timer:tourney-part', this.tourneyPart);
     }
   }
 }

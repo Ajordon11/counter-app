@@ -30,7 +30,8 @@
 </template>
 
 <script>
-// const { ipcRenderer } = require('electron');
+
+import { ipcRenderer } from "electron";
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 10;
 const ALERT_THRESHOLD = 5;
@@ -100,13 +101,12 @@ export default {
     },
   },
   mounted() {
-    this.emitter.on("timer:start", this.startTimer);
-    this.emitter.on("timer:pause", () => this.isPaused = true);
-    this.emitter.on("timer:time-limit", time => {
+    ipcRenderer.on("timer:start", this.startTimer);
+    ipcRenderer.on("timer:pause", () => this.isPaused = true);
+    ipcRenderer.on("timer:time-limit", (event, time) => {
       this.onTimesUp();
       this.timeLimit = time;
     });
-    this.startTimer();
   },
 
   watch: {
@@ -145,8 +145,8 @@ export default {
 <style scoped lang="scss">
 .base-timer {
   position: relative;
-  width: 750px;
-  height: 750px;
+  width: 650px;
+  height: 650px;
 
   &__svg {
     transform: scaleX(-1);
@@ -186,13 +186,13 @@ export default {
 
   &__label {
     position: absolute;
-    width: 750px;
-    height: 750px;
+    width: 650px;
+    height: 650px;
     top: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 300px;
+    font-size: 250px;
   }
 }
 </style>

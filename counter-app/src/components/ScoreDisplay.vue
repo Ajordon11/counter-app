@@ -10,7 +10,7 @@
 </template>
 
 <script>
-// const { ipcRenderer } = require('electron');
+import { ipcRenderer } from "electron";
 
 export default {
   name: 'ScoreDisplay',
@@ -23,10 +23,10 @@ export default {
     }
   },
   mounted() {
-    this.emitter.on('score:team1', score => this.score1 = score);
-    this.emitter.on('score:team2', score => this.score2 = score);
-    this.emitter.on('score:name:team1', name1 => this.team1 = name1);
-    this.emitter.on('score:name:team2', name2 => this.team2 = name2);
+    ipcRenderer.on('score:team1', (event, score) => this.score1 = score);
+    ipcRenderer.on('score:team2', (event, score) => this.score2 = score);
+    ipcRenderer.on('score:name:team1', (event, name1) => this.team1 = name1);
+    ipcRenderer.on('score:name:team2', (event, name2) => this.team2 = name2);
   }
 }
 </script>

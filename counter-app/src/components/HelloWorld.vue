@@ -10,25 +10,29 @@
       </div>
     </div>
   </div>
-    <MainToolbar/>
 </template>
 
 <script>
-// const { ipcRenderer } = require('electron');
 
 
 import BaseTimer from "@/components/BaseTimer";
 import ScoreDisplay from "@/components/ScoreDisplay";
 import MatchPartDisplay from "@/components/MatchPartDisplay";
-import MainToolbar from "@/components/MainToolbar";
-
+import { ipcRenderer } from "electron";
 export default {
   name: 'HelloWorld',
   components: {
     BaseTimer,
     ScoreDisplay,
-    MainToolbar,
     MatchPartDisplay
+  },
+  mounted() {
+    ipcRenderer.on('main-test', (event, payload)  => console.log('event captured in hello world ', payload));
+  },
+  methods: {
+    click() {
+      ipcRenderer.send('test', 'hello to main');
+    },
   }
 }
 </script>
